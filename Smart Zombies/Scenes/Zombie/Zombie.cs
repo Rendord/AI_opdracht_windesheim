@@ -11,17 +11,17 @@ namespace SmartZombies.Scenes.Zombie
             Slow = 3,
         }
 
-        public Character Target;
+        private Character _target;
 
         public override void _Ready()
         {
-            Target = GetTree().CurrentScene.GetNode<Character>("Human");
+            _target = GetTree().CurrentScene.GetNode<Character>("Human");
         }
 
         public override void _PhysicsProcess(float delta)
         {
-            Velocity += SeekBehaviour(Target.Position);
-            Velocity += ArriveBehaviour(Target.Position, Deceleration.Fast);
+            Velocity += SeekBehaviour(_target.Position);
+            Velocity += ArriveBehaviour(_target.Position, Deceleration.Fast);
             if (Velocity.LengthSquared() > 0.0001)
             {
                 Heading = Velocity.Normalized();
