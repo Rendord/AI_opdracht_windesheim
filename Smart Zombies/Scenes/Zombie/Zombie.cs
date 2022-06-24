@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 namespace SmartZombies.Scenes.Zombie
@@ -12,22 +13,23 @@ namespace SmartZombies.Scenes.Zombie
         }
 
         private Character _target;
+        private RayCast2D _velocityRayCast;
 
         public override void _Ready()
         {
             _target = GetTree().CurrentScene.GetNode<Character>("Human");
+            _velocityRayCast = GetNode<RayCast2D>("Velocity");
         }
 
         public override void _PhysicsProcess(float delta)
         {
-            Velocity += SeekBehaviour(_target.Position);
+            // Velocity += SeekBehaviour(_target.Position);
+            Velocity += PursuitBehaviour(_target);
             Velocity += ArriveBehaviour(_target.Position, Deceleration.Fast);
-            if (Velocity.LengthSquared() > 0.0001)
-            {
-                Heading = Velocity.Normalized();
-            }
 
-            MoveAndSlide(Velocity);
+            _velocityRayCast.CastTo = Velocity;
+
+            base._PhysicsProcess(delta);
         }
 
         private Vector2 SeekBehaviour(Vector2 targetPosition)
@@ -55,8 +57,7 @@ namespace SmartZombies.Scenes.Zombie
             const float decelerationTweaker = 0.3f;
             var calculatedSpeed = dist / ((int)speed * decelerationTweaker);
             var desiredVelocity = toTarget * calculatedSpeed / dist;
-            desiredVelocity.Clamped(MaxSpeed);
-            return desiredVelocity - Velocity;
+            return (desiredVelocity - Velocity).Normalized() * MaxSpeed;
         }
 
         private Vector2 PursuitBehaviour(Character evader)

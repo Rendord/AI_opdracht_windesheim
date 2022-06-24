@@ -1,22 +1,13 @@
 using Godot;
-using System;
-using SmartZombies.Scenes;
 
-public class Human : Character
+namespace SmartZombies.Scenes.Human
 {
-    // Declare member variables here. Examples:
-    // private int a = 2;
-    // private string b = "text";
-
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
+    public class Human : Character
     {
-
+        public override void _PhysicsProcess(float delta)
+        {
+            Velocity += new Vector2(-MaxSpeed, 1);
+            base._PhysicsProcess(delta);
+        }
     }
-
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
-//  public override void _Process(float delta)
-//  {
-//
-//  }
 }
