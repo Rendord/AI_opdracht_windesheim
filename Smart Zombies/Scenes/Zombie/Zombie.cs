@@ -69,6 +69,7 @@ namespace SmartZombies.Scenes.Zombie
                 return SeekBehaviour(evader.Position);
             }
 
+            
             var lookAheadTime = toEvader.Length() / MaxSpeed + evader.Velocity.Length();
             return SeekBehaviour(evader.Position + evader.Velocity * lookAheadTime);
         }
