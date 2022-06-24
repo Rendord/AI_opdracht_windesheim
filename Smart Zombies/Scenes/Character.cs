@@ -4,10 +4,11 @@ namespace SmartZombies.Scenes
 {
     public class Character : KinematicBody2D
     {
-        protected const float MaxSpeed = 500;
+        [Export] protected readonly float MaxSpeed;
+
+        [Export] public readonly float Mass;
 
         public Vector2 Velocity;
-        public float Mass;
         public Vector2 Heading;
         public bool Tagged = false;
     }
