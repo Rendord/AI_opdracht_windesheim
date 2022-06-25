@@ -14,7 +14,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Entities/BaseGameEntity.gd"
 }, {
-"base": "BaseGameEntity",
+"base": "Reference",
 "class": "MovingEntity",
 "language": "GDScript",
 "path": "res://Entities/MovingEntity.gd"

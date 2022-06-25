@@ -36,6 +36,7 @@ namespace SmartZombies.Scenes.Zombie
 			// Velocity += SeekBehaviour(_target.Position);
 			//Velocity += PursuitBehaviour(_target);
 			//Velocity += ArriveBehaviour(_target.Position, Deceleration.Fast);
+			
 			Velocity += WanderBehaviour(50);
 			_velocityRayCast.CastTo = Velocity;
 
