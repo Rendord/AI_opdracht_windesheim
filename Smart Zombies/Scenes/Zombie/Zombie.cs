@@ -25,7 +25,7 @@ namespace SmartZombies.Scenes.Zombie
 		public override void _Ready()
 		{
 			_wanderPoint = Position;
-			_target = GetTree().CurrentScene.GetNode<Character>("Human");
+
 			_velocityRayCast = GetNode<RayCast2D>("Velocity");
 			_wanderRayCast = GetNode<RayCast2D>("Wander");
 			_circle = GetNode<Node2D>("Node2D");

@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://icon.png" type="Texture" id=1]
-[ext_resource path="res://Scenes/Zombie/Zombie.cs" type="TextFile" id=2]
+[ext_resource path="res://Scenes/Zombie/Zombie.cs" type="Script" id=2]
 [ext_resource path="res://Scenes/Map/Map.tscn" type="PackedScene" id=4]
 
 [sub_resource type="RectangleShape2D" id=1]
