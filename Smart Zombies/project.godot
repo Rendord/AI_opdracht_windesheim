@@ -9,20 +9,10 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "KinematicBody2D",
-"class": "Character",
-"language": "GDScript",
-"path": "res://Entities/Character.gd"
-}, {
 "base": "Node2D",
 "class": "MyWorld",
 "language": "GDScript",
 "path": "res://World.gd"
-}, {
-"base": "Object",
-"class": "Obstacle",
-"language": "GDScript",
-"path": "res://Entities/Obstacle.gd"
 }, {
 "base": "Reference",
 "class": "Vector2D",
@@ -30,9 +20,7 @@ _global_script_classes=[ {
 "path": "res://Classes/Vector2D.gd"
 } ]
 _global_script_class_icons={
-"Character": "",
 "MyWorld": "",
-"Obstacle": "",
 "Vector2D": ""
 }
 
