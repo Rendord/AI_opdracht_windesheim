@@ -6,7 +6,7 @@ onready var Target : Character = get_parent().get_node("Zombie")
 func _physics_process(_delta: float) -> void:
 	var steering: Vector2 = Vector2.ZERO
 	steering += HideBehaviour(Target, Obstacles)
-	steering += avoid_obstacles_steering()
+	steering += ObstacleAvoidanceBehaviour()
 	steering = steering.clamped(max_steering)
 	
 	velocity += steering

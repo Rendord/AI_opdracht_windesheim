@@ -1,39 +1,6 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=2 format=2]
 
 [ext_resource path="res://TileMaps/Walls.tres" type="TileSet" id=3]
-
-[sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 32, 32 )
-
-[sub_resource type="RectangleShape2D" id=2]
-extents = Vector2( 24, 40 )
-
-[sub_resource type="RectangleShape2D" id=3]
-extents = Vector2( 32, 32 )
-
-[sub_resource type="RectangleShape2D" id=4]
-extents = Vector2( 32, 32 )
-
-[sub_resource type="RectangleShape2D" id=5]
-extents = Vector2( 24, 24 )
-
-[sub_resource type="RectangleShape2D" id=6]
-extents = Vector2( 24, 32 )
-
-[sub_resource type="RectangleShape2D" id=7]
-extents = Vector2( 56, 48 )
-
-[sub_resource type="RectangleShape2D" id=8]
-extents = Vector2( 24, 24 )
-
-[sub_resource type="RectangleShape2D" id=9]
-extents = Vector2( 24, 32 )
-
-[sub_resource type="RectangleShape2D" id=10]
-extents = Vector2( 32, 24 )
-
-[sub_resource type="RectangleShape2D" id=11]
-extents = Vector2( 24, 24 )
 
 [node name="Map" type="Node2D"]
 __meta__ = {
@@ -57,88 +24,55 @@ position = Vector2( 344, 224 )
 collision_layer = 2
 collision_mask = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="obstacles/top1"]
-shape = SubResource( 1 )
-
 [node name="top2" type="StaticBody2D" parent="obstacles"]
 position = Vector2( 704, 152 )
 collision_layer = 2
 collision_mask = 0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="obstacles/top2"]
-shape = SubResource( 2 )
 
 [node name="middle1" type="StaticBody2D" parent="obstacles"]
 position = Vector2( 256, 432 )
 collision_layer = 2
 collision_mask = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="obstacles/middle1"]
-shape = SubResource( 3 )
-
 [node name="middle2" type="StaticBody2D" parent="obstacles"]
 position = Vector2( 384, 432 )
 collision_layer = 2
 collision_mask = 0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="obstacles/middle2"]
-shape = SubResource( 4 )
 
 [node name="bottom1" type="StaticBody2D" parent="obstacles"]
 position = Vector2( 160, 552 )
 collision_layer = 2
 collision_mask = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="obstacles/bottom1"]
-shape = SubResource( 5 )
-
 [node name="middle3" type="StaticBody2D" parent="obstacles"]
 position = Vector2( 624, 384 )
 collision_layer = 2
 collision_mask = 0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="obstacles/middle3"]
-shape = SubResource( 6 )
 
 [node name="middle4" type="StaticBody2D" parent="obstacles"]
 position = Vector2( 888, 400 )
 collision_layer = 2
 collision_mask = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="obstacles/middle4"]
-shape = SubResource( 7 )
-
 [node name="bottom2" type="StaticBody2D" parent="obstacles"]
 position = Vector2( 608, 616 )
 collision_layer = 2
 collision_mask = 0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="obstacles/bottom2"]
-shape = SubResource( 8 )
 
 [node name="middle5" type="StaticBody2D" parent="obstacles"]
 position = Vector2( 1136, 352 )
 collision_layer = 2
 collision_mask = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="obstacles/middle5"]
-shape = SubResource( 9 )
-
 [node name="top3" type="StaticBody2D" parent="obstacles"]
 position = Vector2( 1128, 168 )
 collision_layer = 2
 collision_mask = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="obstacles/top3"]
-shape = SubResource( 10 )
-
 [node name="bottom3" type="StaticBody2D" parent="obstacles"]
 position = Vector2( 1120, 568 )
 collision_layer = 2
 collision_mask = 0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="obstacles/bottom3"]
-shape = SubResource( 11 )
 
 [node name="edgeChecker" type="RayCast2D" parent="."]
 enabled = true
