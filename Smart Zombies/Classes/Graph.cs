@@ -68,17 +68,17 @@ public class Graph : Node
 		v.adjacent.Add(e);
 	}
 
-	public void AStar(Vertex startnode, Vertex endnode)
-	{
-		foreach (var vertex in Vertices)
-		{
-			vertex.Reset()
-		}
-
-		Startingnode = startnode;
-		Endnode = endnode;
-		
-	}
+//	public void AStar(Vertex startnode, Vertex endnode)
+//	{
+//		foreach (var vertex in Vertices)
+//		{
+//			vertex.Reset()
+//		}
+//
+//		Startingnode = startnode;
+//		Endnode = endnode;
+//
+//	}
 	
 
 	private bool EvaluateStart()
