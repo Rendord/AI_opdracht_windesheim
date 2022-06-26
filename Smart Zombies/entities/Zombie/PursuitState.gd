@@ -12,3 +12,6 @@ func Do() -> void:
 
 func Exit() -> void:
 	print("pursuit exit")
+	
+func get_class() -> String:
+	return "PursuitState"
