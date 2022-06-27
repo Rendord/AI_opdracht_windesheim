@@ -1,4 +1,4 @@
-extends "Character.gd"
+extends "../Character.gd"
 
 var rng = RandomNumberGenerator.new() 
 
@@ -9,18 +9,38 @@ var wanderPoint : Vector2
 var target = Vector2(640,310)
 onready var circle = get_node("Node2D/circle")
 onready var wandercast = get_node("Wander")
+onready var velocityRayCast = get_node("Velocity")
+
+onready var stateMachine = get_node("StateMachine")
+
+onready var StateLabel = get_node("StateLabel")
+
+var steering = Vector2.ZERO
 
 func _ready():
 	wanderPoint = position
-
-func _physics_process(delta):
-	var steering = Vector2.ZERO
-	steering += WanderBehaviour(50)
-	steering += avoid_obstacles_steering()
-	steering.clamped(max_steering)
-	velocity += steering
+	
+func _process(delta):
+	steering = Vector2.ZERO
+	stateMachine.StateAction();
+	steering += ObstacleAvoidanceBehaviour()
+	velocity += steering.clamped(max_steering)
+	
+	velocityRayCast.cast_to = velocity
 	._physics_process(delta)
-
+	
+func _unhandled_input(event):
+	if event is InputEventKey:
+			if event.pressed and event.scancode == KEY_TAB:
+				StateLabel.visible = true
+				var previousState = ""
+				if(stateMachine.previousState):
+					previousState = stateMachine.previousState.get_class()
+				
+				StateLabel.text = "Previous State: " + previousState + "\n"
+				StateLabel.text += "Current State: " + stateMachine.currentState.get_class()
+			else:
+				StateLabel.hide()
 
 func PursuitBehaviour(var evader):
 	var ToEvader = evader.position - position
@@ -43,6 +63,4 @@ func WanderBehaviour(wanderDistance : float):
 		var wanderTarget = (heading * wanderDistance) + wanderPoint;
 		wandercast.cast_to = wanderTarget;
 
-		return wanderTarget;
-
-
+		return wanderTarget
