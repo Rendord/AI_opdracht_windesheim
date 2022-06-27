@@ -179,7 +179,7 @@ namespace SmartZombies
 		{
 			foreach (Node2D child in graphRepresentation.GetChildren())
 			{
-				child.Scale = 1;
+				child.Scale = new Vector2(1,1);
 			}
 			consideredNodes.ForEach(vertex =>
 			{
