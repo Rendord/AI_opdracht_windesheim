@@ -1,6 +1,8 @@
-﻿namespace SmartZombies.FuzzyLogic
+﻿using Godot;
+
+namespace SmartZombies.FuzzyLogic
 {
-    class FuzzyRule
+    class FuzzyRule : Object
     {
         public FuzzyTerm Antecedent;
         public FuzzyTerm Consequence;

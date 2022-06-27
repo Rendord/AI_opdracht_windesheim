@@ -1,6 +1,8 @@
-﻿namespace SmartZombies.FuzzyLogic
+﻿using Godot;
+
+namespace SmartZombies.FuzzyLogic
 {
-    public abstract class FuzzyTerm
+    public abstract class FuzzyTerm : Object
     {
         public abstract FuzzyTerm Clone();
 

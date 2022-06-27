@@ -19,11 +19,14 @@ namespace SmartZombies
 		public PackedScene vertexScene;
 		public FuzzyModule FuzzyModule;
 		public bool FuzzyInitialized;
+		public List<Vertex> currentPath;
+		public List<Vertex> consideredNodes;
+		public bool show_graph = true;
 
 		// Called when the node enters the scene tree for the first time.
 		public override void _Ready()
 		{
-			
+			InitializeFuzzyModule();
 			vertexScene = (PackedScene)ResourceLoader.Load("res://Scenes/Graph/Node.tscn");
 			
 			Obstacles.Add(new Obstacle(new Vector2(344,224), 40, "top1"));
@@ -39,6 +42,7 @@ namespace SmartZombies
 			Obstacles.Add(new Obstacle(new Vector2(160,552), 32, "bottom1"));
 			GetNode("Human").Set("Obstacles", Obstacles);
 			//GetNode("Human").Set("Target", GetNode("Zombie"));
+			GetNode("Zombie").Set("target", GetNode("Human"));
 			edgeChecker = GetNode<RayCast2D>("Map/edgeChecker");
 			graphRepresentation = GetNode<Node2D>("Map/graphRepresentation");
 
@@ -51,43 +55,36 @@ namespace SmartZombies
 				vertexNode.Name = vertex.position.ToString();
 				graphRepresentation.AddChild(vertexNode);
 			}
-
-			Random rand = new Random(); 
-			var start = worldGraph.Vertices.ElementAt((rand.Next(0, worldGraph.Vertices.Count))).Value;
-			var end = worldGraph.Vertices.ElementAt((rand.Next(0, worldGraph.Vertices.Count))).Value;
-			Console.WriteLine(start.position);
-			Console.WriteLine(end.position);
-			Console.WriteLine("beep");
-			var result  = worldGraph.AStar(start, end);
-			var path = result.Item1;
-			path.Add(start);
-			path.Add(end);
-
-			var considered = result.Item2;
-			considered.ForEach(vertex =>
-			{
-				var vertexRep = graphRepresentation.GetNode<Node2D>(vertex.position.ToString());
-				vertexRep.Scale = new Vector2(3, 3);
-			});
 			
-			path.ForEach(vertex =>
-			{
-				var vertexRep = graphRepresentation.GetNode<Node2D>(vertex.position.ToString());
-				vertexRep.Scale = new Vector2(5, 5);
-			});
+			// Random rand = new Random(); 
+			// var start = worldGraph.Vertices.ElementAt((rand.Next(0, worldGraph.Vertices.Count))).Value;
+			// var end = worldGraph.Vertices.ElementAt((rand.Next(0, worldGraph.Vertices.Count))).Value;
+			// Console.WriteLine(start.position);
+			// Console.WriteLine(end.position);
+			// Console.WriteLine("beep");
+			// var result  = worldGraph.AStar(start, end);
+			// var path = result.Item1;
+			// path.Add(start);
+			// path.Add(end);
+
+			
 			
 			
 		}
 
 		public override void _Draw()
 		{
-			foreach (var vertex in worldGraph.Vertices.Values)
+			if (show_graph)
 			{
-				foreach (var edge in vertex.adjacent)
+				foreach (var vertex in worldGraph.Vertices.Values)
 				{
-					DrawLine(vertex.position, edge.dest.position, Colors.Aqua);
+					foreach (var edge in vertex.adjacent)
+					{
+						DrawLine(vertex.position, edge.dest.position, Colors.Aqua);
+					}
 				}
 			}
+			
 		}
 
 		public void InitializeFuzzyModule()
@@ -100,7 +97,7 @@ namespace SmartZombies
 			FuzzyVariable DistanceToTarget = FuzzyModule.CreateFLV("DistanceToTarget");
 			FzSet Close = DistanceToTarget.AddLeftShoulderSet("Close", 0, 60, 120);
 			FzSet MediumFar = DistanceToTarget.AddTriangularSet("MediumFar", 60, 120, 300);
-			FzSet Far = DistanceToTarget.AddRightShoulderSet("Far", 120, 300, 1000);
+			FzSet Far = DistanceToTarget.AddRightShoulderSet("Far", 120, 300, 3000);
 			FuzzyVariable TimeSinceLastSeen = FuzzyModule.CreateFLV("TimeSinceLastSeen");
 			FzSet Short = TimeSinceLastSeen.AddLeftShoulderSet("Short", 0, 0, 15);
 			FzSet Medium = TimeSinceLastSeen.AddTriangularSet("Medium", 0, 15, 30);
@@ -116,23 +113,85 @@ namespace SmartZombies
 			FuzzyModule.AddRule(new FuzzyAnd(Long,MediumFar),Calm);
 			FuzzyModule.AddRule(new FuzzyAnd(Long,Far),Calm);
 
-			FuzzyInitialized = true;	
+			FuzzyInitialized = true;
 		}
 
-		public double CalculateAggression(FuzzyModule FM, double distance, double lastTimeSeen)
+		public double CalculateAggression(double distance, double lastTimeSeen)
 		{
 			if (FuzzyInitialized)
 			{
-				FM.Fuzzify("DistanceToTarget", distance);
-				FM.Fuzzify("TimeSinceLastSeen", lastTimeSeen);
+				FuzzyModule.Fuzzify("DistanceToTarget", distance);
+				FuzzyModule.Fuzzify("TimeSinceLastSeen", lastTimeSeen);
 
-				return FM.DeFuzzify("Aggresion");
+				return FuzzyModule.DeFuzzify("Aggression");
 			}
 			else
 			{
 				return 0;
 			}
 
+		}
+
+		public List<Vector2> CalculateAStarForPlayer(Vector2 from, Vector2 to)
+		{
+			List<Vector2> gd_path = new List<Vector2>();
+			Vector2 start = default;
+			Vector2 end = default;
+			double distStart = Double.MaxValue;
+			double distEnd = Double.MaxValue;
+			foreach (var vertex in worldGraph.Vertices.Keys)
+			{
+				double current = vertex.DistanceSquaredTo(from);
+				if (current < distStart)
+				{
+					distStart = current;
+					start = vertex;
+				}
+
+				current = vertex.DistanceSquaredTo(to);
+				if (current < distEnd)
+				{
+					distEnd = current;
+					end = vertex;
+				}
+			}
+
+			if (start != default && end != default)
+			{
+				var result = worldGraph.AStar(worldGraph.Vertices[start], worldGraph.Vertices[end]);
+				var path = result.Item1;
+				path.Prepend(worldGraph.Vertices[start]);
+				path.Add(worldGraph.Vertices[end]);
+				currentPath = path;
+				consideredNodes = result.Item2;
+				HighLightNodes();
+				path.ForEach(vertex =>
+				{
+					gd_path.Add(vertex.position);
+				});
+			}
+
+			return gd_path;
+
+		}
+
+		public void HighLightNodes()
+		{
+			foreach (Node2D child in graphRepresentation.GetChildren())
+			{
+				child.Scale = 1;
+			}
+			consideredNodes.ForEach(vertex =>
+			{
+				var vertexRep = graphRepresentation.GetNode<Node2D>(vertex.position.ToString());
+				vertexRep.Scale = new Vector2(3, 3);
+			});
+			
+			currentPath.ForEach(vertex =>
+			{
+				var vertexRep = graphRepresentation.GetNode<Node2D>(vertex.position.ToString());
+				vertexRep.Scale = new Vector2(5, 5);
+			});
 		}
 	}
 

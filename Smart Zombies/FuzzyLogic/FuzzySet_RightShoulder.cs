@@ -37,7 +37,7 @@
             //out of range of FLV
             else
             {
-                return 0;
+                return 1;
             }
         }
 

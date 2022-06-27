@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using Godot;
 
 namespace SmartZombies.FuzzyLogic
 {
-    public class FuzzyModule
+    public class FuzzyModule : Object
     {
         private List<FuzzyRule> Rules;
             private Dictionary<string, FuzzyVariable> Variables;

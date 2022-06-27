@@ -8,7 +8,7 @@ var heading : Vector2
 var radius : float = 8
 onready var raycasts: Node2D = get_node("RayCasts")
 var max_avoid_force = 100
-var max_steering : float = 2.5
+var max_steering : float = 50;
 
 enum Decel {slow = 3, normal = 2, fast = 1}
 
@@ -53,7 +53,7 @@ func ObstacleAvoidanceBehaviour() -> Vector2:
 			var obstacle = raycast.get_collider()
 			
 			if obstacle is PhysicsBody2D:
-				var avoid_force = 1.0 + (collisionVector - obstacle.global_position).length() / collisionVector.length()
+				var avoid_force = 1.0 + (collisionVector - obstacle.global_position).length() / 1 + collisionVector.length()
 				print("obstacle")
 				var lateralForce = (raycast.get_collision_point() - obstacle.global_position) * avoid_force;
 
