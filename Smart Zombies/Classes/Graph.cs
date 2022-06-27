@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using SmartZombies.Classes;
 
@@ -67,19 +68,74 @@ public class Graph : Node
 		Edge e = new Edge(getVertex(destination), cost);
 		v.adjacent.Add(e);
 	}
+	
+	private float Heuristic(Vertex a, Vertex b)
+	{
+		return (float)Math.Sqrt((a.position.x - b.position.x) * (a.position.x - b.position.x) + (a.position.y - b.position.y) * (a.position.y - b.position.y));
+	}
 
-//	public void AStar(Vertex startnode, Vertex endnode)
-//	{
-//		foreach (var vertex in Vertices)
-//		{
-//			vertex.Reset()
-//		}
-//
-//		Startingnode = startnode;
-//		Endnode = endnode;
-//
-//	}
-//
+	private List<Vertex> constructPath(Dictionary<Vertex, Vertex> path, Vertex endNode)
+	{
+		List<Vertex> totalPath = new List<Vertex>();
+		Vertex currentNode = endNode;
+		while (path.Keys.Contains(currentNode))
+		{
+			currentNode = path[currentNode];
+			totalPath.Insert(0, currentNode);
+		}
+		return totalPath;
+	}
+	
+	public Tuple<List<Vertex>, List<Vertex>> AStar(Vertex startNode, Vertex endNode)
+	{
+		var openList = new List<Vertex>();
+		var consideredList = new List<Vertex>();
+		openList.Add(startNode);
+		// path
+		var path = new Dictionary<Vertex, Vertex>();
+		var gScore = new Dictionary<Vertex, double>();
+		gScore.Add(startNode, 0);
+		var fScore = new Dictionary<Vertex, double>();
+		fScore.Add(startNode, Heuristic(startNode, startNode));
+		
+		while (openList.Count > 0)
+		{
+			// select node with lowest fScore value
+			Vertex currentNode = openList[0];
+			double lowestF = fScore[currentNode];
+			openList.ForEach(node =>
+			{
+				if (fScore[node] < lowestF)
+				{
+					lowestF = fScore[node];
+					currentNode = node;
+				}
+			});
+			// end if current is the end node
+			if (currentNode == endNode)
+			{
+				return Tuple.Create(constructPath(path, endNode), consideredList);
+			}
+			openList.Remove(currentNode);
+			consideredList.Add(currentNode);
+			currentNode.adjacent.ForEach(edge =>
+			{
+				Vertex adjacentNode = edge.dest;
+				double tentativeScore = gScore[currentNode] + edge.cost;
+				if (!gScore.ContainsKey(adjacentNode) || tentativeScore < gScore[adjacentNode])
+				{
+					path[adjacentNode] = currentNode;
+					gScore[adjacentNode] = tentativeScore;
+					fScore[adjacentNode] = tentativeScore + Heuristic(adjacentNode, endNode);
+					if (!openList.Contains(adjacentNode)) 
+						openList.Add(adjacentNode);
+				}
+			});
+		}
+		// unable to find path
+		return new Tuple<List<Vertex>, List<Vertex>>(openList, consideredList);
+	}
+
 
 	private bool EvaluateStart()
 	{
